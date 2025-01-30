@@ -1,27 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
   const clientCodeInput = document.getElementById('client-code');
   const companyNameInput = document.getElementById('company-name');
-  const tombamentoInput = document.getElementById('tombamento');
-  const capacityInput = document.getElementById('capacity');
-  const quantityInput = document.getElementById('quantity');
-  const capturePhotoButton = document.getElementById('capture-photo');
-  const restartProcessButton = document.getElementById('restart-process');
-  const photoPreview = document.getElementById('photo-preview');
-  const info = document.getElementById('info');
-  const shareButton = document.getElementById('share-data');
-  const mapContainer = document.getElementById('map');
-  const mapTitle = document.getElementById('map-title');
   const phoneInput = document.getElementById('phone');
   const emailInput = document.getElementById('email');
+  const tankNumberInput = document.getElementById('tank-number');
+  const capacityInput = document.getElementById('capacity');
+  const litersInput = document.getElementById('liters');
+  const photoPreview = document.getElementById('photo-preview');
+  const info = document.getElementById('info');
+  const mapTitle = document.getElementById('map-title');
+  const mapContainer = document.getElementById('map');
+  const shareButton = document.getElementById('share-data');
+  const restartProcessButton = document.getElementById('restart-process');
 
   let clientCode = '';
   let photoBlob = null;
   let locationData = {};
   let map = null;
 
-  // Validação e sanitização
+  // Função para validar código do cliente
   const validateClientCode = (code) => /^C\d{6}$/.test(code);
   const sanitizeClientCode = (code) => code.toUpperCase().replace(/[^C0-9]/g, '');
+
+  // Função para validar telefone
   const validatePhone = (phone) => /^\(\d{2}\)\s?\d{5}-\d{4}$/.test(phone);
   const sanitizePhone = (phone) => {
     const cleaned = phone.replace(/\D/g, '');
@@ -30,9 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     return phone;
   };
+
+  // Função para validar e-mail
   const validateEmail = (email) => /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email);
 
-  // Captura da foto
+  // Função para capturar a foto
   const capturePhoto = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -64,13 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Obtendo a localização do usuário
+  // Função para obter a localização
   const getUserLocation = () =>
     new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(resolve, reject)
     );
 
-  // Atualizando o mapa
+  // Atualiza o mapa com a localização
   const updateMap = (latitude, longitude) => {
     if (!map) {
       map = L.map('map').setView([latitude, longitude], 15);
@@ -88,28 +91,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Captura de foto e dados
-  capturePhotoButton.addEventListener('click', async () => {
+  // Capturar foto e mostrar localização
+  document.getElementById('capture-photo').addEventListener('click', async () => {
     clientCode = sanitizeClientCode(clientCodeInput.value);
-    const companyName = companyNameInput.value;
-    const tombamento = tombamentoInput.value;
-    const capacity = capacityInput.value;
-    const quantity = quantityInput.value;
     const phone = sanitizePhone(phoneInput.value);
     const email = emailInput.value;
+    const companyName = companyNameInput.value;
+    const tankNumber = tankNumberInput.value;
+    const capacity = capacityInput.value;
+    const liters = litersInput.value;
 
     if (!validateClientCode(clientCode)) {
-      alert('O código do cliente deve começar com "C" seguido de 6 números.');
+      alert('Código do Cliente inválido.');
+      return;
+    }
+
+    if (!companyName) {
+      alert('Razão Social é obrigatória.');
       return;
     }
 
     if (phone && !validatePhone(phone)) {
-      alert('Telefone inválido. Utilize o formato: (85) 91234-4321');
+      alert('Telefone inválido.');
       return;
     }
 
     if (email && !validateEmail(email)) {
-      alert('E-mail inválido. Utilize o formato: exemplo@dominio.com.');
+      alert('E-mail inválido.');
       return;
     }
 
@@ -125,11 +133,11 @@ document.addEventListener('DOMContentLoaded', () => {
       info.innerHTML = `
         <strong>Código do Cliente:</strong> ${clientCode}<br>
         <strong>Razão Social:</strong> ${companyName}<br>
-        <strong>N° Tombamento:</strong> ${tombamento}<br>
-        <strong>Capacidade de Litros:</strong> ${capacity}<br>
-        <strong>Quantidade de Litros:</strong> ${quantity}<br>
         <strong>Telefone:</strong> ${phone || 'Não fornecido'}<br>
         <strong>E-mail:</strong> ${email || 'Não fornecido'}<br>
+        <strong>N° Tombamento:</strong> ${tankNumber || 'Não fornecido'}<br>
+        <strong>Capacidade:</strong> ${capacity || 'Não fornecido'} Litros<br>
+        <strong>Quantidade de Litros:</strong> ${liters || 'Não fornecido'} Litros<br>
         <strong>Latitude:</strong> ${locationData.latitude.toFixed(6)}<br>
         <strong>Longitude:</strong> ${locationData.longitude.toFixed(6)}<br>
       `;
@@ -149,19 +157,42 @@ document.addEventListener('DOMContentLoaded', () => {
     location.reload();
   });
 
-  // Compartilhar os dados por e-mail
-  shareButton.addEventListener('click', () => {
-    const textData = `Código do Cliente: ${clientCode}\nRazão Social: ${companyName}\nN° Tombamento: ${tombamento}\nCapacidade de Litros: ${capacity}\nQuantidade de Litros: ${quantity}\nTelefone: ${phoneInput.value}\nE-mail: ${emailInput.value}\nLatitude: ${locationData.latitude.toFixed(6)}\nLongitude: ${locationData.longitude.toFixed(6)}`;
+  // Compartilhar dados
+  shareButton.addEventListener('click', async () => {
+    const textData = `Código do Cliente: ${clientCode}\nRazão Social: ${companyNameInput.value}\nTelefone: ${phoneInput.value}\nE-mail: ${emailInput.value}\nNúmero de Tombamento: ${tankNumberInput.value}\nCapacidade: ${capacityInput.value} Litros\nQuantidade de Litros: ${litersInput.value}\nLatitude: ${locationData.latitude.toFixed(6)}\nLongitude: ${locationData.longitude.toFixed(6)}`;
 
-    const mailtoLink = `mailto:${emailInput.value}?subject=Cadastro do Cliente&body=${encodeURIComponent(textData)}`;
-    window.location.href = mailtoLink;
+    // Verificando se o dispositivo suporta a funcionalidade de compartilhamento
+    if (navigator.canShare && navigator.canShare({ files: [new File([photoBlob], `${clientCode}.jpg`, { type: 'image/jpeg' })] })) {
+      try {
+        const shareData = {
+          title: 'Captura de Coordenadas',
+          text: textData,
+          files: [new File([photoBlob], `${clientCode}.jpg`, { type: 'image/jpeg' })],
+        };
+        await navigator.share(shareData);
+      } catch (error) {
+        console.log('Erro ao compartilhar:', error);
+        alert('Erro ao compartilhar os dados.');
+      }
+    } else if (navigator.canShare) {
+      try {
+        await navigator.share({ title: 'Cadastro de Cliente', text: textData });
+      } catch (error) {
+        console.log('Erro ao compartilhar texto:', error);
+        alert('Erro ao compartilhar o texto.');
+      }
+    } else {
+      // Caso o dispositivo não suporte o compartilhamento
+      alert('Seu dispositivo não suporta a funcionalidade de compartilhamento.');
+    }
   });
 
-  // Validação dos campos
+  // Validação do código do cliente
   clientCodeInput.addEventListener('input', () => {
     clientCodeInput.value = sanitizeClientCode(clientCodeInput.value);
   });
 
+  // Validação do telefone
   phoneInput.addEventListener('input', () => {
     phoneInput.value = sanitizePhone(phoneInput.value);
   });
