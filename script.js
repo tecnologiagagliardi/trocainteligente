@@ -102,17 +102,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const liters = litersInput.value;
 
     if (!validateClientCode(clientCode)) {
-      alert('Código do Cliente inválido.');
+      alert('Verifique novamente o Código do Cliente (Obrigatório)');
       return;
     }
 
     if (!companyName) {
-      alert('Razão Social é obrigatória.');
+      alert('Verifique novamente a Razão Social (Obrigatório)');
       return;
     }
 
     if (phone && !validatePhone(phone)) {
-      alert('Telefone inválido.');
+      alert('Número de telefone inválido.');
       return;
     }
 
