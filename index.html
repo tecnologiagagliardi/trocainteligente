@@ -19,44 +19,50 @@
 
         <section id="client-info">
             <form id="client-form">
+
                 <label for="client-code" aria-label="Código do Cliente">
                     <img src="cardcode.png" alt="icone cliente"><b>Código do Cliente:</b>
                 </label>
+
                 <input type="text" id="client-code" maxlength="7" placeholder="Ex: C123456" required
                     aria-describedby="client-code-info">
 
                 <label for="company-name" aria-label="Razão Social">
-                    <img src="business.png" alt="ícone razão social"><b>Razão Social do Cliente:</b>
+                    <img src="company.png" alt="icone razão social"><b>Razão Social:</b>
                 </label>
-                <input type="text" id="company-name" placeholder="Razão Social" required
-                    aria-describedby="company-name-info">
 
-                <label for="tombamento" aria-label="Número de Tombamento">
-                    <img src="tombamento.png" alt="ícone tombamento"><b>N° Tombamento do Tanque:</b>
-                </label>
-                <input type="text" id="tombamento" placeholder="Ex: T123456" required
-                    aria-describedby="tombamento-info">
-
-                <label for="capacity" aria-label="Capacidade de Litros">
-                    <img src="capacity.png" alt="ícone capacidade"><b>Capacidade de Litros:</b>
-                </label>
-                <input type="number" id="capacity" placeholder="Ex: 1000" required aria-describedby="capacity-info">
-
-                <label for="quantity" aria-label="Quantidade de Litros">
-                    <img src="quantity.png" alt="ícone quantidade"><b>Quantidade de Litros:</b>
-                </label>
-                <input type="number" id="quantity" placeholder="Ex: 500" required aria-describedby="quantity-info">
+                <input type="text" id="company-name" placeholder="Ex: Empresa XYZ" required>
 
                 <label for="phone" aria-label="Telefone">
                     <img src="phone.png" alt="icone telefone"><b>Telefone do Cliente:</b>
                 </label>
+
                 <input type="tel" id="phone" maxlength="15" placeholder="Ex: (85) 91234-4321"
                     aria-describedby="phone-info">
 
                 <label for="email" aria-label="E-mail">
                     <img src="mail.png" alt="icone email"><b>E-mail do Cliente:</b>
                 </label>
+
                 <input type="email" id="email" placeholder="Ex: exemplo@dominio.com" aria-describedby="email-info">
+
+                <label for="tank-number" aria-label="Número de Tombamento">
+                    <img src="tombamento.png" alt="icone tombamento"><b>N° Tombamento do Tanque:</b>
+                </label>
+
+                <input type="text" id="tank-number" placeholder="Ex: T123456">
+
+                <label for="capacity" aria-label="Capacidade de Litros">
+                    <img src="capacity.png" alt="icone capacidade"><b>Capacidade de Litros:</b>
+                </label>
+
+                <input type="number" id="capacity" placeholder="Ex: 200" min="1">
+
+                <label for="liters" aria-label="Quantidade de Litros">
+                    <img src="liters.png" alt="icone litros"><b>Quantidade de Litros:</b>
+                </label>
+
+                <input type="number" id="liters" placeholder="Ex: 150" min="0">
 
                 <h2>Aponte a câmera para a fachada do cliente</h2>
                 <button type="button" id="capture-photo" aria-label="Capturar Foto">Capturar Foto e Coordenadas</button>
