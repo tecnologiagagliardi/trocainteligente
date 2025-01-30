@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Página para capturar coordenadas de localização e foto do cliente, e compartilhá-las com segurança.">
-    <title>Localize - Grupo Gagliardi</title>
+        content="Troca Inteligente - Grupo Gagliardi">
+    <title>Troca Inteligente - Grupo Gagliardi</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
@@ -14,7 +14,7 @@
 <body>
     <div class="container"><br><br>
         <header>
-            <img id="header-image" src="gagliardi.png" alt="Grupo Gagliardi"><br><br><br>
+            <img id="header-image" src="trocainteligente.png" alt="Grupo Gagliardi"><br><br><br>
         </header>
 
         <section id="client-info">
@@ -28,10 +28,10 @@
                     aria-describedby="client-code-info">
 
                 <label for="company-name" aria-label="Razão Social">
-                    <img src="company.png" alt="icone razão social"><b>Razão Social:</b>
+                    <img src="company.png" alt="icone razao social"><b>Razão Social:</b>
                 </label>
 
-                <input type="text" id="company-name" placeholder="Ex: Empresa XYZ" required>
+                <input type="text" id="company-name" maxlength="50" placeholder="Ex: GAGLIARDI DISTRIBUIDORA" required>
 
                 <label for="phone" aria-label="Telefone">
                     <img src="phone.png" alt="icone telefone"><b>Telefone do Cliente:</b>
@@ -44,27 +44,27 @@
                     <img src="mail.png" alt="icone email"><b>E-mail do Cliente:</b>
                 </label>
 
-                <input type="email" id="email" placeholder="Ex: exemplo@dominio.com" aria-describedby="email-info">
+                <input type="email" id="email" maxlength="30" placeholder="Ex: exemplo@dominio.com" aria-describedby="email-info">
 
                 <label for="tank-number" aria-label="Número de Tombamento">
                     <img src="tombamento.png" alt="icone tombamento"><b>N° Tombamento do Tanque:</b>
                 </label>
 
-                <input type="text" id="tank-number" placeholder="Ex: T123456">
+                <input type="text" id="tank-number" maxlength="10" placeholder="Ex: T123456">
 
                 <label for="capacity" aria-label="Capacidade de Litros">
                     <img src="capacity.png" alt="icone capacidade"><b>Capacidade de Litros:</b>
                 </label>
 
-                <input type="number" id="capacity" placeholder="Ex: 200" min="1">
+                <input type="number" id="capacity" maxlength="10" placeholder="Ex: 200" min="1">
 
                 <label for="liters" aria-label="Quantidade de Litros">
                     <img src="liters.png" alt="icone litros"><b>Quantidade de Litros:</b>
                 </label>
 
-                <input type="number" id="liters" placeholder="Ex: 150" min="0">
+                <input type="number" id="liters" maxlength="5" placeholder="Ex: 150" min="0">
 
-                <h2>Aponte a câmera para a fachada do cliente</h2>
+                <h2>Aponte a câmera para o tanque</h2>
                 <button type="button" id="capture-photo" aria-label="Capturar Foto">Capturar Foto e Coordenadas</button>
             </form>
         </section>
