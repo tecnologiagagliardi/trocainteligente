@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Compartilhar dados
   shareButton.addEventListener('click', async () => {
-    const textData = `Código do Cliente: ${clientCode}\nRazão Social: ${companyNameInput.value}\nTelefone: ${phoneInput.value}\nE-mail: ${emailInput.value}\nNúmero de Tombamento: ${tankNumberInput.value}\nCapacidade de Litros: ${capacityInput.value} Litros\nQuantidade de Litros: ${litersInput.value}\nLatitude: ${locationData.latitude.toFixed(6)}\nLongitude: ${locationData.longitude.toFixed(6)}`;
+    const textData = `Código do Cliente: ${clientCode}\nRazão Social: ${companyNameInput.value}\nTelefone: ${phoneInput.value}\nE-mail: ${emailInput.value}\nNúmero de Tombamento: ${tankNumberInput.value}\nCapacidade do Tanque: ${capacityInput.value} Litros\nQuantidade do Tanque: ${litersInput.value} Litros\nLatitude: ${locationData.latitude.toFixed(6)}\nLongitude: ${locationData.longitude.toFixed(6)}`;
 
     // Verificando se o dispositivo suporta a funcionalidade de compartilhamento
     if (navigator.canShare && navigator.canShare({ files: [new File([photoBlob], `${clientCode}.jpg`, { type: 'image/jpeg' })] })) {
