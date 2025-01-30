@@ -102,12 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const liters = litersInput.value;
 
     if (!validateClientCode(clientCode)) {
-      alert('Verifique novamente o Código do Cliente (Obrigatório)');
+      alert('Verifique novamente o Código do Cliente (Informação Obrigatória)');
       return;
     }
 
     if (!companyName) {
-      alert('Verifique novamente a Razão Social (Obrigatório)');
+      alert('Verifique novamente a Razão Social (Informação Obrigatória)');
       return;
     }
 
