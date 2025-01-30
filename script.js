@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const clientCodeInput = document.getElementById('client-code');
+  const companyNameInput = document.getElementById('company-name');
+  const tombamentoInput = document.getElementById('tombamento');
+  const capacityInput = document.getElementById('capacity');
+  const quantityInput = document.getElementById('quantity');
   const capturePhotoButton = document.getElementById('capture-photo');
   const restartProcessButton = document.getElementById('restart-process');
   const photoPreview = document.getElementById('photo-preview');
@@ -9,17 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const mapTitle = document.getElementById('map-title');
   const phoneInput = document.getElementById('phone');
   const emailInput = document.getElementById('email');
-  const businessNameInput = document.getElementById('business-name');
-  const tankNumberInput = document.getElementById('tank-number');
-  const capacityInput = document.getElementById('capacity');
-  const quantityInput = document.getElementById('quantity');
 
   let clientCode = '';
   let photoBlob = null;
   let locationData = {};
   let map = null;
 
-  // Validação dos campos
+  // Validação e sanitização
   const validateClientCode = (code) => /^C\d{6}$/.test(code);
   const sanitizeClientCode = (code) => code.toUpperCase().replace(/[^C0-9]/g, '');
   const validatePhone = (phone) => /^\(\d{2}\)\s?\d{5}-\d{4}$/.test(phone);
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   const validateEmail = (email) => /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email);
 
-  // Função para capturar a foto
+  // Captura da foto
   const capturePhoto = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -64,13 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Função para obter a localização do usuário
+  // Obtendo a localização do usuário
   const getUserLocation = () =>
     new Promise((resolve, reject) =>
       navigator.geolocation.getCurrentPosition(resolve, reject)
     );
 
-  // Atualiza o mapa com a localização
+  // Atualizando o mapa
   const updateMap = (latitude, longitude) => {
     if (!map) {
       map = L.map('map').setView([latitude, longitude], 15);
@@ -88,15 +88,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Capturar foto e mostrar a localização no mapa
+  // Captura de foto e dados
   capturePhotoButton.addEventListener('click', async () => {
     clientCode = sanitizeClientCode(clientCodeInput.value);
-    const phone = sanitizePhone(phoneInput.value);
-    const email = emailInput.value;
-    const businessName = businessNameInput.value;
-    const tankNumber = tankNumberInput.value;
+    const companyName = companyNameInput.value;
+    const tombamento = tombamentoInput.value;
     const capacity = capacityInput.value;
     const quantity = quantityInput.value;
+    const phone = sanitizePhone(phoneInput.value);
+    const email = emailInput.value;
 
     if (!validateClientCode(clientCode)) {
       alert('O código do cliente deve começar com "C" seguido de 6 números.');
@@ -124,12 +124,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       info.innerHTML = `
         <strong>Código do Cliente:</strong> ${clientCode}<br>
+        <strong>Razão Social:</strong> ${companyName}<br>
+        <strong>N° Tombamento:</strong> ${tombamento}<br>
+        <strong>Capacidade de Litros:</strong> ${capacity}<br>
+        <strong>Quantidade de Litros:</strong> ${quantity}<br>
         <strong>Telefone:</strong> ${phone || 'Não fornecido'}<br>
         <strong>E-mail:</strong> ${email || 'Não fornecido'}<br>
-        <strong>Razão Social:</strong> ${businessName || 'Não fornecido'}<br>
-        <strong>M° Tombamento:</strong> ${tankNumber || 'Não fornecido'}<br>
-        <strong>Capacidade de Litros:</strong> ${capacity || 'Não fornecido'}<br>
-        <strong>Quantidade de Litros:</strong> ${quantity || 'Não fornecido'}<br>
         <strong>Latitude:</strong> ${locationData.latitude.toFixed(6)}<br>
         <strong>Longitude:</strong> ${locationData.longitude.toFixed(6)}<br>
       `;
@@ -149,24 +149,15 @@ document.addEventListener('DOMContentLoaded', () => {
     location.reload();
   });
 
-  // Compartilhar os dados por email
+  // Compartilhar os dados por e-mail
   shareButton.addEventListener('click', () => {
-    const subject = 'Troca Inteligente';
-    const body = `
-      Código do Cliente: ${clientCode}\n
-      Telefone: ${phoneInput.value}\n
-      E-mail: ${emailInput.value}\n
-      Razão Social: ${businessNameInput.value}\n
-      M° Tombamento: ${tankNumberInput.value}\n
-      Capacidade de Litros: ${capacityInput.value}\n
-      Quantidade de Litros: ${quantityInput.value}\n
-      Latitude: ${locationData.latitude.toFixed(6)}\n
-      Longitude: ${locationData.longitude.toFixed(6)}
-    `;
-    window.location.href = `mailto:trocainteligente@grupogagliardi.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const textData = `Código do Cliente: ${clientCode}\nRazão Social: ${companyName}\nN° Tombamento: ${tombamento}\nCapacidade de Litros: ${capacity}\nQuantidade de Litros: ${quantity}\nTelefone: ${phoneInput.value}\nE-mail: ${emailInput.value}\nLatitude: ${locationData.latitude.toFixed(6)}\nLongitude: ${locationData.longitude.toFixed(6)}`;
+
+    const mailtoLink = `mailto:${emailInput.value}?subject=Cadastro do Cliente&body=${encodeURIComponent(textData)}`;
+    window.location.href = mailtoLink;
   });
 
-  // Validação do código do cliente
+  // Validação dos campos
   clientCodeInput.addEventListener('input', () => {
     clientCodeInput.value = sanitizeClientCode(clientCodeInput.value);
   });
