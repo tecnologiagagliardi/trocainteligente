@@ -136,8 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <strong>Telefone:</strong> ${phone || 'Não fornecido'}<br>
         <strong>E-mail:</strong> ${email || 'Não fornecido'}<br>
         <strong>N° Tombamento:</strong> ${tankNumber || 'Não fornecido'}<br>
-        <strong>Capacidade:</strong> ${capacity || 'Não fornecido'} Litros<br>
-        <strong>Quantidade de Litros:</strong> ${liters || 'Não fornecido'} Litros<br>
+        <strong>Capacidade do Tanque:</strong> ${capacity || 'Não fornecido'} Litros<br>
+        <strong>Quantidade no Tanque:</strong> ${liters || 'Não fornecido'} Litros<br>
         <strong>Latitude:</strong> ${locationData.latitude.toFixed(6)}<br>
         <strong>Longitude:</strong> ${locationData.longitude.toFixed(6)}<br>
       `;
