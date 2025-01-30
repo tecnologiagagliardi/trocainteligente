@@ -19,21 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
   let locationData = {};
   let map = null;
 
-  // Validação do Código do Cliente
+  // Validação dos campos
   const validateClientCode = (code) => /^C\d{6}$/.test(code);
   const sanitizeClientCode = (code) => code.toUpperCase().replace(/[^C0-9]/g, '');
-
-  // Validação do telefone
   const validatePhone = (phone) => /^\(\d{2}\)\s?\d{5}-\d{4}$/.test(phone);
   const sanitizePhone = (phone) => {
-    const cleaned = phone.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+    const cleaned = phone.replace(/\D/g, '');
     if (cleaned.length === 11) {
       return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7)}`;
     }
     return phone;
   };
-
-  // Validação de e-mail
   const validateEmail = (email) => /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email);
 
   // Função para capturar a foto
@@ -85,98 +81,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
       L.marker([latitude, longitude])
         .addTo(map)
-        .bindPopup(`Você está aqui!<br>Lat: ${latitude}, Lng: ${longitude}`)
+        .bindPopup(`Você está aqui!<br>Lat: ${latitude.toFixed(6)}<br>Lng: ${longitude.toFixed(6)}`)
         .openPopup();
-
-      mapTitle.style.display = 'block';
-      mapContainer.style.display = 'block';
     } else {
       map.setView([latitude, longitude], 15);
-      L.marker([latitude, longitude]).addTo(map);
     }
   };
 
-  // Função para compartilhar as informações
-  shareButton.addEventListener('click', () => {
-    const subject = 'Troca Inteligente';
-    const body = `
-    Código do Cliente: ${clientCode}\n
-    Telefone: ${phoneInput.value}\n
-    E-mail: ${emailInput.value}\n
-    Razão Social: ${businessNameInput.value}\n
-    M° Tombamento: ${tankNumberInput.value}\n
-    Capacidade de Litros: ${capacityInput.value}\n
-    Quantidade de Litros: ${quantityInput.value}\n
-    Latitude: ${locationData.latitude.toFixed(6)}\n
-    Longitude: ${locationData.longitude.toFixed(6)}\n
-    Foto do Cliente: [Imagem capturada](${photoPreview.src})
-    `;
-
-    window.location.href = `mailto:trocainteligente@grupogagliardi.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  });
-
-  // Função de reinício
-  restartProcessButton.addEventListener('click', () => {
-    clientCodeInput.value = '';
-    phoneInput.value = '';
-    emailInput.value = '';
-    businessNameInput.value = '';
-    tankNumberInput.value = '';
-    capacityInput.value = '';
-    quantityInput.value = '';
-    photoPreview.style.display = 'none';
-    photoPreview.src = '';
-    mapContainer.style.display = 'none';
-    mapTitle.style.display = 'none';
-    shareButton.style.display = 'none';
-    restartProcessButton.style.display = 'none';
-    info.textContent = '';
-  });
-
-  // Captura da foto e localização
+  // Capturar foto e mostrar a localização no mapa
   capturePhotoButton.addEventListener('click', async () => {
     clientCode = sanitizeClientCode(clientCodeInput.value);
-    if (!validateClientCode(clientCode)) {
-      alert('Código do Cliente inválido!');
-      return;
-    }
-    
     const phone = sanitizePhone(phoneInput.value);
-    if (!validatePhone(phone)) {
-      alert('Telefone inválido!');
+    const email = emailInput.value;
+    const businessName = businessNameInput.value;
+    const tankNumber = tankNumberInput.value;
+    const capacity = capacityInput.value;
+    const quantity = quantityInput.value;
+
+    if (!validateClientCode(clientCode)) {
+      alert('O código do cliente deve começar com "C" seguido de 6 números.');
       return;
     }
 
-    if (!validateEmail(emailInput.value)) {
-      alert('E-mail inválido!');
+    if (phone && !validatePhone(phone)) {
+      alert('Telefone inválido. Utilize o formato: (85) 91234-4321');
+      return;
+    }
+
+    if (email && !validateEmail(email)) {
+      alert('E-mail inválido. Utilize o formato: exemplo@dominio.com.');
       return;
     }
 
     try {
-      const position = await getUserLocation();
-      locationData.latitude = position.coords.latitude;
-      locationData.longitude = position.coords.longitude;
-
       await capturePhoto();
-      updateMap(locationData.latitude, locationData.longitude);
+
+      const position = await getUserLocation();
+      locationData = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      };
 
       info.innerHTML = `
-        <b>Informações do Cliente:</b><br>
-        Código: ${clientCode}<br>
-        Telefone: ${phone}<br>
-        E-mail: ${emailInput.value}<br>
-        Razão Social: ${businessNameInput.value}<br>
-        M° Tombamento: ${tankNumberInput.value}<br>
-        Capacidade de Litros: ${capacityInput.value}<br>
-        Quantidade de Litros: ${quantityInput.value}<br>
-        Latitude: ${locationData.latitude.toFixed(6)}<br>
-        Longitude: ${locationData.longitude.toFixed(6)}<br>
+        <strong>Código do Cliente:</strong> ${clientCode}<br>
+        <strong>Telefone:</strong> ${phone || 'Não fornecido'}<br>
+        <strong>E-mail:</strong> ${email || 'Não fornecido'}<br>
+        <strong>Razão Social:</strong> ${businessName || 'Não fornecido'}<br>
+        <strong>M° Tombamento:</strong> ${tankNumber || 'Não fornecido'}<br>
+        <strong>Capacidade de Litros:</strong> ${capacity || 'Não fornecido'}<br>
+        <strong>Quantidade de Litros:</strong> ${quantity || 'Não fornecido'}<br>
+        <strong>Latitude:</strong> ${locationData.latitude.toFixed(6)}<br>
+        <strong>Longitude:</strong> ${locationData.longitude.toFixed(6)}<br>
       `;
 
+      mapTitle.style.display = 'block';
       shareButton.style.display = 'block';
       restartProcessButton.style.display = 'block';
+      updateMap(locationData.latitude, locationData.longitude);
     } catch (error) {
-      alert('Erro ao obter a localização!');
+      console.error('Erro ao acessar a localização:', error);
+      alert('Erro ao acessar a localização!');
     }
+  });
+
+  // Reiniciar o processo
+  restartProcessButton.addEventListener('click', () => {
+    location.reload();
+  });
+
+  // Compartilhar os dados por email
+  shareButton.addEventListener('click', () => {
+    const subject = 'Troca Inteligente';
+    const body = `
+      Código do Cliente: ${clientCode}\n
+      Telefone: ${phoneInput.value}\n
+      E-mail: ${emailInput.value}\n
+      Razão Social: ${businessNameInput.value}\n
+      M° Tombamento: ${tankNumberInput.value}\n
+      Capacidade de Litros: ${capacityInput.value}\n
+      Quantidade de Litros: ${quantityInput.value}\n
+      Latitude: ${locationData.latitude.toFixed(6)}\n
+      Longitude: ${locationData.longitude.toFixed(6)}
+    `;
+    window.location.href = `mailto:trocainteligente@grupogagliardi.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  });
+
+  // Validação do código do cliente
+  clientCodeInput.addEventListener('input', () => {
+    clientCodeInput.value = sanitizeClientCode(clientCodeInput.value);
+  });
+
+  phoneInput.addEventListener('input', () => {
+    phoneInput.value = sanitizePhone(phoneInput.value);
   });
 });
