@@ -149,24 +149,22 @@ document.addEventListener('DOMContentLoaded', () => {
     location.reload();
   });
 
-// Função para compartilhar por e-mail com a imagem como link
-shareButton.addEventListener('click', () => {
-  const subject = 'Troca Inteligente';
-  const body = `
-    Código do Cliente: ${clientCode}\n
-    Telefone: ${phoneInput.value}\n
-    E-mail: ${emailInput.value}\n
-    Razão Social: ${businessNameInput.value}\n
-    M° Tombamento: ${tankNumberInput.value}\n
-    Capacidade de Litros: ${capacityInput.value}\n
-    Quantidade de Litros: ${quantityInput.value}\n
-    Latitude: ${locationData.latitude.toFixed(6)}\n
-    Longitude: ${locationData.longitude.toFixed(6)}\n
-    Foto do Cliente: [Imagem capturada](${photoPreview.src})
-  `;
-  window.location.href = `mailto:trocainteligente@grupogagliardi.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
- });
-
+  // Compartilhar os dados por email
+  shareButton.addEventListener('click', () => {
+    const subject = 'Troca Inteligente';
+    const body = `
+      Código do Cliente: ${clientCode}\n
+      Telefone: ${phoneInput.value}\n
+      E-mail: ${emailInput.value}\n
+      Razão Social: ${businessNameInput.value}\n
+      M° Tombamento: ${tankNumberInput.value}\n
+      Capacidade de Litros: ${capacityInput.value}\n
+      Quantidade de Litros: ${quantityInput.value}\n
+      Latitude: ${locationData.latitude.toFixed(6)}\n
+      Longitude: ${locationData.longitude.toFixed(6)}
+    `;
+    window.location.href = `mailto:trocainteligente@grupogagliardi.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  });
 
   // Validação do código do cliente
   clientCodeInput.addEventListener('input', () => {
