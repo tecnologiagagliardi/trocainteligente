@@ -1,3 +1,2 @@
-# localize
-Sistema de Geolocalização
-https://tecnologiagagliardi.github.io/localize/
+# TrocaInteligente
+https://tecnologiagagliardi.github.io/trocainteligente
