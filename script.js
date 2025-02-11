@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const companyNameInput = document.getElementById('company-name');
   const phoneInput = document.getElementById('phone');
   const emailInput = document.getElementById('email');
+  const propNumberInput = document.getElementById('prop-number');
   const tankNumberInput = document.getElementById('tank-number');
   const capacityInput = document.getElementById('capacity');
   const litersInput = document.getElementById('liters');
+  const observationsInput = document.getElementById('observations');
   const photoPreview = document.getElementById('photo-preview');
   const info = document.getElementById('info');
   const mapTitle = document.getElementById('map-title');
@@ -84,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       L.marker([latitude, longitude])
         .addTo(map)
-        .bindPopup(`Você está aqui!<br>Lat: ${latitude.toFixed(6)}<br>Lng: ${longitude.toFixed(6)}`)
+        .bindPopup(`O Tanque está aqui!<br>Lat: ${latitude.toFixed(6)}<br>Lng: ${longitude.toFixed(6)}`)
         .openPopup();
     } else {
       map.setView([latitude, longitude], 15);
@@ -97,9 +99,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const phone = sanitizePhone(phoneInput.value);
     const email = emailInput.value;
     const companyName = companyNameInput.value;
+    const propNumber = propNumberInput.value;
     const tankNumber = tankNumberInput.value;
     const capacity = capacityInput.value;
     const liters = litersInput.value;
+    const observations = observationsInput.value;
 
     if (!validateClientCode(clientCode)) {
       alert('Verifique novamente o Código do Cliente (Informação Obrigatória)');
@@ -135,9 +139,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <strong>Razão Social:</strong> ${companyName}<br>
         <strong>Telefone:</strong> ${phone || 'Não fornecido'}<br>
         <strong>E-mail:</strong> ${email || 'Não fornecido'}<br>
-        <strong>N° Tombamento:</strong> ${tankNumber || 'Não fornecido'}<br>
+        <strong>N° Tombamento Propulsora:</strong> ${propNumber || 'Não fornecido'}<br>
+        <strong>N° Tombamento Tanque:</strong> ${tankNumber || 'Não fornecido'}<br>
         <strong>Capacidade do Tanque:</strong> ${capacity || 'Não fornecido'} Litros<br>
         <strong>Quantidade no Tanque:</strong> ${liters || 'Não fornecido'} Litros<br>
+        <strong>Observações:</strong> ${observations || 'Não fornecido'}<br>
         <strong>Latitude:</strong> ${locationData.latitude.toFixed(6)}<br>
         <strong>Longitude:</strong> ${locationData.longitude.toFixed(6)}<br>
       `;
@@ -159,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Compartilhar dados
   shareButton.addEventListener('click', async () => {
-    const textData = `Código do Cliente: ${clientCode}\nRazão Social: ${companyNameInput.value}\nTelefone: ${phoneInput.value}\nE-mail: ${emailInput.value}\nN° de Tombamento: ${tankNumberInput.value}\nCapacidade do Tanque: ${capacityInput.value} Litros\nQuantidade do Tanque: ${litersInput.value} Litros\nLatitude: ${locationData.latitude.toFixed(6)}\nLongitude: ${locationData.longitude.toFixed(6)}`;
+    const textData = `Código do Cliente: ${clientCode}\nRazão Social: ${companyNameInput.value}\nTelefone: ${phoneInput.value}\nE-mail: ${emailInput.value}\nN° Tombamento Propulsora: ${propNumberInput.value}\nN° Tombamento Tanque: ${tankNumberInput.value}\nCapacidade do Tanque: ${capacityInput.value} Litros\nQuantidade do Tanque: ${litersInput.value} Litros\nObservações: ${observationsInput.value}\nLatitude: ${locationData.latitude.toFixed(6)}\nLongitude: ${locationData.longitude.toFixed(6)}`;
 
     // Verificando se o dispositivo suporta a funcionalidade de compartilhamento
     if (navigator.canShare && navigator.canShare({ files: [new File([photoBlob], `${clientCode}.jpg`, { type: 'image/jpeg' })] })) {
@@ -195,5 +201,37 @@ document.addEventListener('DOMContentLoaded', () => {
   // Validação do telefone
   phoneInput.addEventListener('input', () => {
     phoneInput.value = sanitizePhone(phoneInput.value);
+  });
+
+  // Fazendo o campo Razão Social ficar em maiúsculas
+  companyNameInput.addEventListener('input', () => {
+    companyNameInput.value = companyNameInput.value.toUpperCase();
+  });
+
+  // Permitindo apenas números para os campos de capacidade e litros
+  capacityInput.addEventListener('input', () => {
+    capacityInput.value = capacityInput.value.replace(/[^0-9.]/g, '');  // Aceita apenas números e ponto
+  });
+
+  litersInput.addEventListener('input', () => {
+    litersInput.value = litersInput.value.replace(/[^0-9.]/g, '');  // Aceita apenas números e ponto
+  });
+
+  // Limpando os campos quando a página for recarregada
+  window.addEventListener('load', () => {
+    clientCodeInput.value = '';
+    companyNameInput.value = '';
+    phoneInput.value = '';
+    emailInput.value = '';
+    propNumberInput.value = '';
+    tankNumberInput.value = '';
+    capacityInput.value = '';
+    litersInput.value = '';
+    observationsInput.value = '';
+    photoPreview.style.display = 'none';
+    info.innerHTML = '';
+    mapTitle.style.display = 'none';
+    shareButton.style.display = 'none';
+    restartProcessButton.style.display = 'none';
   });
 });
