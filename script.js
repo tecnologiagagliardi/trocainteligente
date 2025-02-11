@@ -106,12 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const observations = observationsInput.value;
 
     if (!validateClientCode(clientCode)) {
-      alert('Verifique novamente o Código do Cliente\n(Informação Obrigatória)');
+      alert('Código do Cliente inválido ou inexistente\n\n(Campo Obrigatório)');
       return;
     }
 
     if (!companyName) {
-      alert('Verifique novamente a Razão Social (Informação Obrigatória)');
+      alert('Razão Social inválida ou inexistente\n\n(Campo Obrigatório)');
       return;
     }
 
