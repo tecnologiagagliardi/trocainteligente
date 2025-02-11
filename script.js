@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const observations = observationsInput.value;
 
     if (!validateClientCode(clientCode)) {
-      alert('Verifique novamente o Código do Cliente (Informação Obrigatória)');
+      alert('Verifique novamente o Código do Cliente\n(Informação Obrigatória)');
       return;
     }
 
