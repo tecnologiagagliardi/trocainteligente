@@ -1,3 +1,3 @@
 # Troca Inteligente
-App do troca inteligente <br><br>
+App do Troca Inteligente <br><br>
 https://tecnologiagagliardi.github.io/trocainteligente
